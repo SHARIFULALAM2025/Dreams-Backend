@@ -1,203 +1,343 @@
 const knex = require('../db')
 const translateText = require('../translateText')
 
-const addProperty = async (req, res) => {
+const addProperty = async (
+    req,
+    res
+) => {
     try {
+        console.log(req.body)
+
         const {
-            propertyName,
-            description,
+            VideoLink,
+            aboutProperty,
             address,
+            amenities,
+            attachment,
             city,
-            state,
             country,
-            propertyPriceSale,
-            propertyBedrooms,
-            propertyBathrooms,
+            description,
+            embedVideo,
             lang,
+            postEmail,
+            postName,
+
+            propertyAC,
+            propertyAvailableCurtains,
+            propertyAvailableFrom,
+            propertyBalcony,
+            propertyBathrooms,
+            propertyBedrooms,
+            propertyCategory,
+            propertyCurrency,
+            propertyFloor,
+            propertyFridge,
+            propertyGarageSize,
+            propertyMicrowave,
+            propertyName,
+            propertyOfferPrice,
+            propertyParking,
+            propertyPriceSale,
+            propertyPropertyId,
+            propertySqft,
+            propertyStructureType,
+            propertyTV,
+            propertyType,
+            propertyWardrobe,
+            propertyWaterPurifier,
+            propertyYearConstructed,
+            state,
         } = req.body
 
-        let translatedName
-        let translatedDescription
-        let translatedAddress
-        let translatedCity
-        let translatedState
-        let translatedCountry
+        // language direction
+        const fromLang =
+            lang === 'bn'
+                ? 'bn'
+                : 'en'
 
-        if (lang === 'bn') {
-            translatedName =
-                await translateText(
-                    propertyName,
-                    'bn',
-                    'en'
+        const toLang =
+            lang === 'bn'
+                ? 'en'
+                : 'bn'
+
+        // safe translate helper
+        const safeTranslate =
+            async text => {
+                if (
+                    !text ||
+                    typeof text !==
+                    'string'
+                ) {
+                    return ''
+                }
+
+                return await translateText(
+                    text,
+                    fromLang,
+                    toLang
                 )
+            }
 
-            translatedDescription =
-                await translateText(
-                    description,
-                    'bn',
-                    'en'
-                )
+        // translations
+        const translatedName =
+            await safeTranslate(
+                propertyName
+            )
 
-            translatedAddress =
-                await translateText(
-                    address,
-                    'bn',
-                    'en'
-                )
+        const translatedDescription =
+            await safeTranslate(
+                description
+            )
 
-            translatedCity =
-                await translateText(
-                    city,
-                    'bn',
-                    'en'
-                )
+        const translatedAbout =
+            await safeTranslate(
+                aboutProperty
+            )
 
-            translatedState =
-                await translateText(
-                    state,
-                    'bn',
-                    'en'
-                )
+        const translatedAddress =
+            await safeTranslate(
+                address
+            )
 
-            translatedCountry =
-                await translateText(
-                    country,
-                    'bn',
-                    'en'
-                )
+        const translatedCity =
+            await safeTranslate(
+                city
+            )
 
-            await knex('properties').insert({
-                property_name:
-                    JSON.stringify({
-                        bn: propertyName,
-                        en: translatedName,
-                    }),
+        const translatedState =
+            await safeTranslate(
+                state
+            )
 
-                description:
-                    JSON.stringify({
-                        bn: description,
-                        en: translatedDescription,
-                    }),
+        const translatedCountry =
+            await safeTranslate(
+                country
+            )
 
-                address:
-                    JSON.stringify({
-                        bn: address,
-                        en: translatedAddress,
-                    }),
-
-                city: JSON.stringify({
-                    bn: city,
-                    en: translatedCity,
-                }),
-
-                state: JSON.stringify({
-                    bn: state,
-                    en: translatedState,
-                }),
-
-                country:
-                    JSON.stringify({
-                        bn: country,
-                        en: translatedCountry,
-                    }),
-
-                property_price_sale:
-                    propertyPriceSale,
-
-                property_bedrooms:
-                    propertyBedrooms,
-
-                property_bathrooms:
-                    propertyBathrooms,
-            })
-        } else {
-            translatedName =
-                await translateText(
-                    propertyName,
-                    'en',
-                    'bn'
-                )
-
-            translatedDescription =
-                await translateText(
-                    description,
-                    'en',
-                    'bn'
-                )
-
-            translatedAddress =
-                await translateText(
-                    address,
-                    'en',
-                    'bn'
-                )
-
-            translatedCity =
-                await translateText(
-                    city,
-                    'en',
-                    'bn'
-                )
-
-            translatedState =
-                await translateText(
-                    state,
-                    'en',
-                    'bn'
-                )
-
-            translatedCountry =
-                await translateText(
-                    country,
-                    'en',
-                    'bn'
-                )
-
-            await knex('properties').insert({
-                property_name:
-                    JSON.stringify({
-                        en: propertyName,
-                        bn: translatedName,
-                    }),
-
-                description:
-                    JSON.stringify({
-                        en: description,
-                        bn: translatedDescription,
-                    }),
-
-                address:
-                    JSON.stringify({
-                        en: address,
-                        bn: translatedAddress,
-                    }),
-
-                city: JSON.stringify({
-                    en: city,
-                    bn: translatedCity,
-                }),
-
-                state: JSON.stringify({
-                    en: state,
-                    bn: translatedState,
-                }),
-
-                country:
-                    JSON.stringify({
-                        en: country,
-                        bn: translatedCountry,
-                    }),
-
-                property_price_sale:
-                    propertyPriceSale,
-
-                property_bedrooms:
-                    propertyBedrooms,
-
-                property_bathrooms:
-                    propertyBathrooms,
-            })
+        // multilingual object
+        const createLangObject = (
+            original,
+            translated
+        ) => {
+            return lang ===
+                'bn'
+                ? {
+                    bn:
+                        original ||
+                        '',
+                    en:
+                        translated ||
+                        '',
+                }
+                : {
+                    en:
+                        original ||
+                        '',
+                    bn:
+                        translated ||
+                        '',
+                }
         }
+
+        // insert data
+        await knex(
+            'properties'
+        ).insert({
+            // multilingual
+            property_name:
+                JSON.stringify(
+                    createLangObject(
+                        propertyName,
+                        translatedName
+                    )
+                ),
+
+            description:
+                JSON.stringify(
+                    createLangObject(
+                        description,
+                        translatedDescription
+                    )
+                ),
+
+            about_property:
+                JSON.stringify(
+                    createLangObject(
+                        aboutProperty,
+                        translatedAbout
+                    )
+                ),
+
+            address:
+                JSON.stringify(
+                    createLangObject(
+                        address,
+                        translatedAddress
+                    )
+                ),
+
+            city: JSON.stringify(
+                createLangObject(
+                    city,
+                    translatedCity
+                )
+            ),
+
+            state:
+                JSON.stringify(
+                    createLangObject(
+                        state,
+                        translatedState
+                    )
+                ),
+
+            country:
+                JSON.stringify(
+                    createLangObject(
+                        country,
+                        translatedCountry
+                    )
+                ),
+
+            // user info
+            post_name:
+                postName || '',
+
+            post_email:
+                postEmail || '',
+
+            // media
+            video_link:
+                VideoLink || '',
+
+            embed_video:
+                embedVideo ||
+                '',
+
+            attachment:
+                JSON.stringify(
+                    attachment ||
+                    []
+                ),
+
+            // property details
+            property_type:
+                propertyType ||
+                '',
+
+            property_category:
+                propertyCategory ||
+                '',
+
+            property_structure_type:
+                propertyStructureType ||
+                '',
+
+            property_property_id:
+                propertyPropertyId ||
+                '',
+
+            property_currency:
+                propertyCurrency ||
+                '',
+
+            // pricing
+            property_price_sale:
+                Number(
+                    propertyPriceSale
+                ) || 0,
+
+            property_offer_price:
+                Number(
+                    propertyOfferPrice
+                ) || 0,
+
+            // numbers
+            property_sqft:
+                Number(
+                    propertySqft
+                ) || 0,
+
+            property_bedrooms:
+                Number(
+                    propertyBedrooms
+                ) || 0,
+
+            property_bathrooms:
+                Number(
+                    propertyBathrooms
+                ) || 0,
+
+            property_floor:
+                Number(
+                    propertyFloor
+                ) || 0,
+
+            property_garage_size:
+                Number(
+                    propertyGarageSize
+                ) || 0,
+
+            property_parking:
+                Number(
+                    propertyParking
+                ) || 0,
+
+            property_ac:
+                Number(
+                    propertyAC
+                ) || 0,
+
+            property_fridge:
+                Number(
+                    propertyFridge
+                ) || 0,
+
+            property_tv:
+                Number(
+                    propertyTV
+                ) || 0,
+
+            property_microwave:
+                Number(
+                    propertyMicrowave
+                ) || 0,
+
+            property_wardrobe:
+                Number(
+                    propertyWardrobe
+                ) || 0,
+
+            property_water_purifier:
+                Number(
+                    propertyWaterPurifier
+                ) || 0,
+
+            // yes/no
+            property_balcony:
+                propertyBalcony ||
+                'no',
+
+            property_available_curtains:
+                propertyAvailableCurtains ===
+                'yes',
+
+            // dates
+            property_available_from:
+                propertyAvailableFrom ||
+                null,
+
+            property_year_constructed:
+                propertyYearConstructed ||
+                null,
+
+            // arrays
+            amenities:
+                JSON.stringify(
+                    amenities ||
+                    []
+                ),
+        })
 
         res.status(201).json({
             success: true,
@@ -205,12 +345,17 @@ const addProperty = async (req, res) => {
                 'Property added successfully',
         })
     } catch (error) {
-        console.log(error)
+        console.log(
+            'Property Save Error:',
+            error
+        )
 
         res.status(500).json({
             success: false,
             message:
                 'Something went wrong',
+            error:
+                error.message,
         })
     }
 }

@@ -1,8 +1,9 @@
 /**
  * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
  */
-exports.up = async function (knex) {
+exports.up = async function (
+    knex
+) {
     await knex.schema.createTable(
         'properties',
         table => {
@@ -10,7 +11,7 @@ exports.up = async function (knex) {
                 .bigIncrements('id')
                 .primary()
 
-            // multilingual fields
+            // multilingual
             table.json(
                 'property_name'
             )
@@ -25,14 +26,23 @@ exports.up = async function (knex) {
             table.json('state')
             table.json('country')
 
-            // basic info
+            // user info
+            table.string(
+                'post_name'
+            )
+
+            table.string(
+                'post_email'
+            )
+
+            // basic
             table.string(
                 'property_type'
-            ) // Buy / Rent
+            )
 
             table.string(
                 'property_category'
-            ) // apartment
+            )
 
             table.string(
                 'property_structure_type'
@@ -77,10 +87,6 @@ exports.up = async function (knex) {
             )
 
             table.integer(
-                'property_balcony'
-            )
-
-            table.integer(
                 'property_garage_size'
             )
 
@@ -113,6 +119,10 @@ exports.up = async function (knex) {
             )
 
             // yes/no
+            table.string(
+                'property_balcony'
+            )
+
             table.boolean(
                 'property_available_curtains'
             )
@@ -135,7 +145,7 @@ exports.up = async function (knex) {
                 'embed_video'
             )
 
-            // array data
+            // arrays
             table.json(
                 'amenities'
             )
@@ -152,12 +162,10 @@ exports.up = async function (knex) {
     )
 }
 
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
 exports.down =
-    async function (knex) {
+    async function (
+        knex
+    ) {
         await knex.schema.dropTableIfExists(
             'properties'
         )
