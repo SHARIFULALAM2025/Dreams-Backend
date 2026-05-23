@@ -10,6 +10,16 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 app.use(express.json());
+//
+// route use
+const propertyRoutes =
+    require(
+        './routes/propertyRoutes'
+    )
+app.use(
+    '/api/property',
+    propertyRoutes
+)
 
 // ==========================================
 // ১. ইউজার রাউটস (আপনার আগের কোড)
