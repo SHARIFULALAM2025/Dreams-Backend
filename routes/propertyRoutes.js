@@ -1,9 +1,12 @@
-const express = require('express')
+const express =
+    require('express')
 
-const router = express.Router()
+const router =
+    express.Router()
 
 const {
     addProperty,
+    getProperties,
 } = require(
     '../controllers/propertyController'
 )
@@ -13,4 +16,10 @@ router.post(
     addProperty
 )
 
-module.exports = router
+router.get(
+    '/',
+    getProperties
+)
+
+module.exports =
+    router

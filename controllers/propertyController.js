@@ -359,7 +359,35 @@ const addProperty = async (
         })
     }
 }
+const getProperties =
+    async (req, res) => {
+        try {
+            const properties =
+                await knex(
+                    'properties'
+                )
+                    .select('*')
+                    .orderBy(
+                        'id',
+                        'desc'
+                    )
+
+            res.status(200).json({
+                success: true,
+                data: properties,
+            })
+        } catch (error) {
+            console.log(error)
+
+            res.status(500).json({
+                success: false,
+                message:
+                    'Failed to fetch properties',
+            })
+        }
+    }
 
 module.exports = {
     addProperty,
+    getProperties,
 }
