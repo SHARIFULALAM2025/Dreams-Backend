@@ -34,17 +34,20 @@ exports.up = async function (
             table.string(
                 'post_email'
             )
+            table.string(
+                'profileUrl'
+            )
 
             // basic
-            table.string(
+            table.json(
                 'property_type'
             )
 
-            table.string(
+            table.json(
                 'property_category'
             )
 
-            table.string(
+            table.json(
                 'property_structure_type'
             )
 
@@ -128,11 +131,11 @@ exports.up = async function (
             )
 
             // dates
-            table.date(
+            table.integer(
                 'property_available_from'
             )
 
-            table.date(
+            table.integer(
                 'property_year_constructed'
             )
 

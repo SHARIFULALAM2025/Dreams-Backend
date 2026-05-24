@@ -21,7 +21,7 @@ const addProperty = async (
             lang,
             postEmail,
             postName,
-
+            profileUrl,
             propertyAC,
             propertyAvailableCurtains,
             propertyAvailableFrom,
@@ -113,7 +113,18 @@ const addProperty = async (
             await safeTranslate(
                 country
             )
-
+        const translatedPropertyType =
+            await safeTranslate(
+                propertyType
+            )
+        const translatePropertyCategory =
+            await safeTranslate(
+                propertyCategory
+            )
+        const translatePropertyStructureType =
+            await safeTranslate(
+                propertyStructureType
+        )
         // multilingual object
         const createLangObject = (
             original,
@@ -198,6 +209,33 @@ const addProperty = async (
                         translatedCountry
                     )
                 ),
+//
+            property_type:
+                JSON.stringify(
+                    createLangObject(
+                        propertyType,
+                        translatedPropertyType
+                    )
+
+                ),
+
+            property_category:
+                JSON.stringify(
+                    createLangObject(
+                        propertyCategory,
+                        translatePropertyCategory
+                    )
+
+                ),
+
+            property_structure_type:
+                JSON.stringify(
+                    createLangObject(
+                        propertyStructureType,
+                        translatePropertyStructureType
+                    )
+
+                ),
 
             // user info
             post_name:
@@ -205,7 +243,7 @@ const addProperty = async (
 
             post_email:
                 postEmail || '',
-
+            profile_Url: profileUrl || '',
             // media
             video_link:
                 VideoLink || '',
