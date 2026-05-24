@@ -150,7 +150,6 @@ const addProperty = async (
                 }
         }
 
-        // insert data
         await knex(
             'properties'
         ).insert({
@@ -209,14 +208,13 @@ const addProperty = async (
                         translatedCountry
                     )
                 ),
-//
+
             property_type:
                 JSON.stringify(
                     createLangObject(
                         propertyType,
                         translatedPropertyType
                     )
-
                 ),
 
             property_category:
@@ -225,7 +223,6 @@ const addProperty = async (
                         propertyCategory,
                         translatePropertyCategory
                     )
-
                 ),
 
             property_structure_type:
@@ -234,7 +231,6 @@ const addProperty = async (
                         propertyStructureType,
                         translatePropertyStructureType
                     )
-
                 ),
 
             // user info
@@ -243,33 +239,26 @@ const addProperty = async (
 
             post_email:
                 postEmail || '',
-            profile_Url: profileUrl || '',
+
+            profileUrl:
+                profileUrl || '',
+
             // media
             video_link:
-                VideoLink || '',
+                ObjectVideoLink || '',
 
             embed_video:
-                embedVideo ||
-                '',
+                embedVideo || '',
 
             attachment:
                 JSON.stringify(
-                    attachment ||
-                    []
+                    attachment || []
                 ),
 
-            // property details
-            property_type:
-                propertyType ||
-                '',
-
-            property_category:
-                propertyCategory ||
-                '',
-
-            property_structure_type:
-                propertyStructureType ||
-                '',
+            amenities:
+                JSON.stringify(
+                    amenities || []
+                ),
 
             property_property_id:
                 propertyPropertyId ||
@@ -362,19 +351,18 @@ const addProperty = async (
 
             // dates
             property_available_from:
-                propertyAvailableFrom ||
-                null,
+                propertyAvailableFrom
+                    ? new Date(
+                        propertyAvailableFrom
+                    ).getTime()
+                    : null,
 
             property_year_constructed:
-                propertyYearConstructed ||
-                null,
-
-            // arrays
-            amenities:
-                JSON.stringify(
-                    amenities ||
-                    []
-                ),
+                propertyYearConstructed
+                    ? new Date(
+                        propertyYearConstructed
+                    ).getTime()
+                    : null,
         })
 
         res.status(201).json({
