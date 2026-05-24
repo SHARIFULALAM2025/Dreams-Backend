@@ -245,7 +245,7 @@ const addProperty = async (
 
             // media
             video_link:
-                ObjectVideoLink || '',
+                VideoLink || '',
 
             embed_video:
                 embedVideo || '',
