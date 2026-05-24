@@ -131,11 +131,11 @@ exports.up = async function (
             )
 
             // dates
-            table.integer(
+            table.date(
                 'property_available_from'
             )
 
-            table.integer(
+            table.date(
                 'property_year_constructed'
             )
 
