@@ -9,7 +9,7 @@ const addProperty = async (
         console.log(req.body)
 
         const {
-            VideoLink,
+            ObjectVideoLink,
             aboutProperty,
             address,
             amenities,
