@@ -352,17 +352,18 @@ const addProperty = async (
             // dates
             property_available_from:
                 propertyAvailableFrom
-                    ? new Date(
-                        propertyAvailableFrom
-                    ).getTime()
+                    ? new Date(propertyAvailableFrom)
+                        .toISOString()
+                        .split('T')[0]
                     : null,
 
             property_year_constructed:
                 propertyYearConstructed
-                    ? new Date(
-                        propertyYearConstructed
-                    ).getTime()
+                    ? new Date(propertyYearConstructed)
+                        .toISOString()
+                        .split('T')[0]
                     : null,
+
         })
 
         res.status(201).json({
