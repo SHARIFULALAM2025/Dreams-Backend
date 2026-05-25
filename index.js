@@ -456,6 +456,46 @@ app.get('/allAgency/data/:name', async (req, res) => {
     }
 });
 
+app.get('/singleAgency/single/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const data = await db('agency_page_data')
+            .where({ component_name: 'agency_page_data' })
+            .first();
+
+        if (data) {
+            let parsedContentData;
+
+
+            if (typeof data.content_data === 'string') {
+                parsedContentData = JSON.parse(data.content_data);
+            } else {
+                parsedContentData = data.content_data;
+            }
+
+
+            if (Array.isArray(parsedContentData)) {
+                const singleAgent = parsedContentData.find(agent => String(agent.id) === String(id));
+
+                if (singleAgent) {
+
+                    return res.json(singleAgent);
+                } else {
+                    return res.status(404).json({ message: `Agent with ID ${id} not found` });
+                }
+            } else {
+                return res.status(500).json({ message: "content_data is not an array" });
+            }
+
+        } else {
+            res.status(404).json({ message: "Component data not found in database" });
+        }
+    } catch (error) {
+        console.error("GET Error:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
