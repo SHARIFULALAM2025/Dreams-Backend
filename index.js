@@ -27,9 +27,9 @@ app.use(
 app.post('/all-user', async (req, res) => {
     console.log(req.body);
 
-    const { name, email, photo } = req.body;
+    const { name, email, photo, password } = req.body;
     try {
-        await db('users').insert({ name, email, photo });
+        await db('users').insert({ name, email, photo, password });
         res.status(201).json({ message: "User saved successfully!" });
     } catch (error) {
         console.error("Database Error:", error);
