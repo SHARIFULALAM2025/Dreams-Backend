@@ -25,20 +25,56 @@ app.use(
 // ১. ইউজার রাউটস (আপনার আগের কোড)
 // ==========================================
 app.post('/all-user', async (req, res) => {
-    console.log(req.body);
+    console.log(req.body)
 
-    const { name, email, photo, password } = req.body;
+    const {
+        name,
+        email,
+        photo,
+        password = null,
+        provider = 'email',
+    } = req.body
+
     try {
-        await db('users').insert({ name, email, photo, password });
-        res.status(201).json({ message: "User saved successfully!" });
-    } catch (error) {
-        console.error("Database Error:", error);
-        if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(200).json({ message: "User already exists" });
+        // check existing user
+        const existingUser = await db('users')
+            .where({ email })
+            .first()
+
+        if (existingUser) {
+            return res.status(200).json({
+                message: 'User already exists',
+                user: existingUser,
+            })
         }
-        res.status(500).json({ error: error.message });
+
+        // insert user
+        const result = await db('users').insert({
+            name,
+            email,
+            photo,
+            password,
+            provider,
+        })
+
+        res.status(201).json({
+            message: 'User saved successfully!',
+            result,
+        })
+
+    } catch (error) {
+        console.error(
+            'Database Error:',
+            error
+        )
+
+        res.status(500).json({
+            message:
+                'Internal Server Error',
+            error: error.message,
+        })
     }
-});
+})
 
 app.get('/users', async (req, res) => {
     try {
