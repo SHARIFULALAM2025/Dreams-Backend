@@ -1,19 +1,31 @@
-require('dotenv').config();
+require('dotenv').config()
 
 module.exports = {
     development: {
         client: 'mysql2',
+
         connection: {
             host: process.env.DB_HOST,
-            port: Number(process.env.DB_PORT),
+            port: Number(
+                process.env.DB_PORT
+            ),
             user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME,
+            password:
+                process.env.DB_PASSWORD,
+            database:
+                process.env.DB_NAME,
+
             ssl: {
-                rejectUnauthorized: false
-            }
+                rejectUnauthorized: false,
+            },
         },
-    }
-};
-//npx knex migrate:make create_faq_page_data_table
-//npx knex migrate:latest
+
+        pool: {
+            min: 2,
+            max: 10,
+            acquireTimeoutMillis: 30000,
+            createTimeoutMillis: 30000,
+            idleTimeoutMillis: 30000,
+        },
+    },
+}
