@@ -415,9 +415,46 @@ app.get('/benefit/data/:name', async (req, res) => {
     }
 });
 
+//
+app.post('/agency/api', async (req, res) => {
+    const { component_name, content_data } = req.body;
+    try {
+
+        const finalData = typeof content_data === 'object' ? JSON.stringify(content_data) : content_data;
+
+        await db('agency_page_data').insert({
+            component_name,
+            content_data: finalData
+        });
+        res.status(201).json({ message: "Component data saved successfully!" });
+    } catch (error) {
+        console.error("POST Error:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+app.get('/allAgency/data/:name', async (req, res) => {
+    try {
+        const data = await db('agency_page_data').where({ component_name: req.params.name }).first();
+
+        if (data) {
+            let parsedData;
 
 
+            if (typeof data.content_data === 'string') {
+                parsedData = JSON.parse(data.content_data);
+            } else {
+                parsedData = data.content_data;
+            }
 
+            res.json(parsedData);
+        } else {
+            res.status(404).json({ message: "Data not found" });
+        }
+    } catch (error) {
+        console.error("GET Error:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 
 const PORT = process.env.PORT || 5000;

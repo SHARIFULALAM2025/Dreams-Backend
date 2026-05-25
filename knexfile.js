@@ -29,3 +29,5 @@ module.exports = {
         },
     },
 }
+
+//npx knex migrate:make create_faq_page_data_table //npx knex migrate:latest
