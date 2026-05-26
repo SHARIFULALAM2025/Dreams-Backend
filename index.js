@@ -33,6 +33,7 @@ app.post('/all-user', async (req, res) => {
         photo,
         password = null,
         provider = 'email',
+        role
     } = req.body
 
     try {
@@ -55,6 +56,7 @@ app.post('/all-user', async (req, res) => {
             photo,
             password,
             provider,
+            role
         })
 
         res.status(201).json({
