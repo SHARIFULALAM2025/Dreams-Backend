@@ -414,7 +414,41 @@ const getProperties =
         }
     }
 
+
+const getPropertyById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Mongoose বাদ দিয়ে Knex ব্যবহার করে SQL ডেটাবেজ থেকে ডেটা খুঁজুন
+        const property = await knex('properties')
+            .where({ id: id }) // অথবা শুধু .where('id', id)
+            .first(); // একটি মাত্র অবজেক্ট পাওয়ার জন্য .first() ব্যবহার করতে হবে
+
+        // যদি ওই ID দিয়ে কোনো প্রপার্টি না পাওয়া যায়
+        if (!property) {
+            return res.status(404).json({
+                success: false,
+                message: "প্রপার্টিটি পাওয়া যায়নি!"
+            });
+        }
+
+        // প্রপার্টি পাওয়া গেলে তা রেসপন্স হিসেবে পাঠানো
+        res.status(200).json({
+            success: true,
+            data: property
+        });
+
+    } catch (error) {
+        console.log('Fetch Property By ID Error:', error);
+        res.status(500).json({
+            success: false,
+            message: "সার্ভারে সমস্যা হয়েছে",
+            error: error.message
+        });
+    }
+};
 module.exports = {
     addProperty,
     getProperties,
+    getPropertyById
 }

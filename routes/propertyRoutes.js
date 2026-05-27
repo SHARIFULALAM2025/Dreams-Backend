@@ -7,6 +7,7 @@ const router =
 const {
     addProperty,
     getProperties,
+    getPropertyById
 } = require(
     '../controllers/propertyController'
 )
@@ -20,6 +21,7 @@ router.get(
     '/',
     getProperties
 )
+router.get('/:id', getPropertyById)
 
 module.exports =
     router
